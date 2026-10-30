@@ -1,0 +1,2 @@
+# arabfx-journal
+Trading journal
