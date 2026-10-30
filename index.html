@@ -6,7 +6,8 @@
 <meta name="theme-color" content="#080a0d">
 <meta name="description" content="ARAB FX personal trading journal">
 <link rel="manifest" href="./manifest.webmanifest">
-<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="icon" href="./icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="./icon-192.png">
 <title>ARAB FX | Trading Journal</title>
 <style>
 :root{--bg:#080a0d;--panel:#11151b;--panel2:#171d25;--gold:#e8b84f;--gold2:#ffd978;--muted:#98a2b3;--line:#29313c;--green:#37c98b;--red:#ff6b70;--text:#f4f6f8}
@@ -34,7 +35,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin-top:28px}
   <div class="small">PERSONAL TRADING JOURNAL</div>
 </div></header>
 <main class="wrap">
-  <div class="hero"><div><h1>Trading Journal</h1><p>Build consistency by reviewing every practice trade.</p></div><div class="actions"><button class="secondary" id="exportBtn">Export CSV</button><button class="secondary" id="clearBtn">Clear journal</button></div></div>
+  <div class="hero"><div><h1>Trading Journal</h1><p>Build consistency by reviewing every practice trade.</p></div><div class="actions"><button class="secondary" id="installBtn" type="button">Install ARAB FX</button><button class="secondary" id="exportBtn">Export CSV</button><button class="secondary" id="clearBtn">Clear journal</button></div></div>
   <div class="notice">Practice journal only: this tool does not connect to a broker, place trades, or provide trading signals. Enter your results manually and never risk money you cannot afford to lose.</div>
   <section class="stats">
     <div class="card"><div class="stat-label">Total trades</div><div class="stat-value" id="total">0</div></div>
@@ -123,6 +124,25 @@ function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 $('search').oninput=render;$('resultFilter').onchange=render;
 $('clearBtn').onclick=()=>{if(trades.length&&confirm('Permanently clear every saved journal entry in this browser?')){trades=[];persist();resetForm()}};
 $('exportBtn').onclick=()=>{if(!trades.length){alert('There are no trades to export yet.');return}const cols=['date','pair','direction','strategy','entry','exit','sl','tp','lots','risk','pnl','emotion','notes'];const csv=[cols.join(','),...trades.map(t=>cols.map(k=>'"'+String(t[k]??'').replace(/"/g,'""')+'"').join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='arabfx-trade-journal.csv';a.click();URL.revokeObjectURL(a.href)};
+
+let deferredInstallPrompt=null;
+const installBtn=document.getElementById('installBtn');
+window.addEventListener('beforeinstallprompt', event=>{
+  event.preventDefault();
+  deferredInstallPrompt=event;
+  installBtn.hidden=false;
+});
+installBtn.addEventListener('click', async ()=>{
+  if(deferredInstallPrompt){
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt=null;
+  } else {
+    alert('If Chrome has not offered installation yet, open Chrome menu (⋮) and look for “Add to Home screen” or “Install app”. If neither appears, use the bookmark for now; Chrome controls when installation is available.');
+  }
+});
+window.addEventListener('appinstalled',()=>{installBtn.textContent='ARAB FX installed';});
+
 render();
 </script>
 </body></html>
