@@ -31,7 +31,6 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin-top:28px}
 </head>
 <body>
 <header><div><div class="brand">ARAB<span>FX</span></div><div class="sub">ANALYZE · TRADE · GROW</div></div><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-  <button class="secondary" id="installBtn" hidden>Install app</button>
   <div class="small">PERSONAL TRADING JOURNAL</div>
 </div></header>
 <main class="wrap">
@@ -83,10 +82,6 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin-top:28px}
 <script>
 const $=id=>document.getElementById(id);
 const KEY='arabfx_trade_journal_v1';
-let installPrompt=null;
-const installBtn=document.getElementById('installBtn');
-window.addEventListener('beforeinstallprompt', e=>{e.preventDefault();installPrompt=e;installBtn.hidden=false;});
-installBtn.addEventListener('click', async ()=>{if(!installPrompt)return;installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;installBtn.hidden=true;});
 if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost')) {
   window.addEventListener('load', ()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 }
